@@ -9,9 +9,9 @@ module Enumerable
 
   def my_any?
     each do |element|
-      return false unless yield(element)
+      return true if yield(element)
     end
-    true
+    false
   end
 
   def my_count
