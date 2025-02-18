@@ -2,9 +2,9 @@ module Enumerable
   # Your code goes here
   def my_all?
     each do |element|
-      return false unless yield(element)
+      return true if element > 0
     end
-    true
+    false
   end
 
   def my_any?
@@ -14,22 +14,23 @@ module Enumerable
     false
   end
 
-  def my_count
+  def my_count(item = nil)
+    return size unless block_given? || item
+
     count = 0
-    each do |element|
-      count += 1 if yield(element)
-    end
+    each { |element| count += 1 if item ? element == item : yield(element) }
+    count
+  end
+  
+  def my_each(item = nil)
+    return size unless block_given? || item
+
+    count = 0
+    each { |element| count += 1 if item ? element == item : yield(element) }
     count
   end
 
-  def my_each
-    for element in self
-      yield(element)
-    end
-    self
-  end
-
-  def my_each_with_index
+  def my_each_with_index 
     for index in 0...self.length
       yield(self[index], index)
     end
@@ -51,15 +52,15 @@ module Enumerable
     end
     result
   end
-
-  def my_none?
+  
+  def my_none?(&block)
     each do |element|
-      return false if yield(element)
+      return false if block_given? ? block.call(element) : element
     end
     true
   end
 
-  def my_select
+  def my_select 
     result = []
     each do |element|
       result << element if yield(element)
